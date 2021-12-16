@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+
+  alchemy.test:
+    image: postgres:latest
+    container_name: sql-alquemy-test
+    environment:
+        POSTGRES_PASSWORD: 54321
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/william/projects/user-api/mount_point:/var/lib/postgresql/data
