@@ -4,12 +4,11 @@ from sqlalchemy.orm import sessionmaker, DeclarativeMeta
 from sqlalchemy import create_engine
 import os
 
-
 class DatabaseConnection:
     __instance = None
     engine = None  # Recebe a conexão
     session = None  # Recebe a sessão da conexão
-    Base: DeclarativeMeta # Recebe uma clase de para criar os models
+
 
     def __init__(self):
         if DatabaseConnection.__instance is not None:
@@ -29,11 +28,16 @@ class DatabaseConnection:
         if connectionString is None:
             connectionString = "postgresql+psycopg2://postgres:54321@localhost:5432/sqlalchemy_tests"
 
-        if not database_exists(self.engine):
+
+        if not database_exists(connectionString):
             create_database(connectionString)
         else:
             self.engine = create_engine(connectionString)
 
         self.engine = create_engine(connectionString)
         self.session = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-        self.Base = declarative_base()
+        self.session.configure(bind=self.engine)
+
+
+DeclarativeBase = declarative_base()  # Recebe uma clase de para criar os models
+
